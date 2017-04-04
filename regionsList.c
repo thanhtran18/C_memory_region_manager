@@ -7,24 +7,24 @@
 #include "regionsList.h"
 
 /*
-typedef struct REGION_NODE regionNode;
+typedef struct REGION_NODE RegionNode;
 struct REGION_NODE
 {
     char * name; //name
     void * data;
     void * block; //block_list
-    regionNode * next;
+    RegionNode * next;
     r_size_t size;
     r_size_t usedBytes; //bytes_used
 };*/
 
-static regionNode * traverse = NULL; //traverse_region
-static regionNode * head = NULL; //top
+static RegionNode * traverse = NULL; //traverse_region
+static RegionNode * head = NULL; //top
 
-regionNode * insert()
+RegionNode * insert()
 {
     //newNode = newRegion
-    regionNode * newNode = ( regionNode * ) malloc( sizeof( regionNode ) ); //newNode = newRegion
+    RegionNode * newNode = ( RegionNode * ) malloc( sizeof( RegionNode ) ); //newNode = newRegion
     assert( newNode != NULL );
 
     if ( newNode != NULL )
@@ -35,13 +35,13 @@ regionNode * insert()
     return newNode;
 } //insert
 
-boolean delete( const char * key )
+Boolean delete( const char * key )
 {
     assert( key != NULL );
-    regionNode * curr;  // = current_node
-    regionNode * prev; //= previous_region
-    boolean deleted = false;
-    boolean passed; // = success
+    RegionNode * curr;  // = current_node
+    RegionNode * prev; //= previous_region
+    Boolean deleted = false;
+    Boolean passed; // = success
 
     if ( key != NULL )
     {
@@ -106,12 +106,12 @@ boolean delete( const char * key )
     return deleted;
 } //delete
 
-//found = search
-boolean found( const char * key ) //key = target
+//found = search_region
+Boolean found( const char * key ) //key = target
 {
     assert( key != NULL );
-    boolean foundResult = false; // = found
-    regionNode * curr; //the curr = current_region
+    Boolean foundResult = false; // = found
+    RegionNode * curr; //the curr = current_region
 
     if ( key != NULL )
     {
@@ -130,12 +130,12 @@ boolean found( const char * key ) //key = target
 } //found
 
 //= return_region
-regionNode search( const char * key ) // = target
+RegionNode search( const char * key ) // = target
 {
     assert( key != NULL );
 
-    regionNode result = NULL; // = found variable
-    regionNode curr;
+    RegionNode result = NULL; // = found variable
+    RegionNode curr;
 
     if ( key != NULL )
     {
@@ -159,7 +159,7 @@ regionNode search( const char * key ) // = target
 } //search
 
 //= first_region
-regionNode * returnFirst()
+RegionNode * returnFirst()
 {
     if ( head == NULL )
     {
@@ -174,7 +174,7 @@ regionNode * returnFirst()
 } //returnFirst
 
 // = next_region
-regionNode * returnNext()
+RegionNode * returnNext()
 {
     if ( traverse != NULL )
     {
