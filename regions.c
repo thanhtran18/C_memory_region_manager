@@ -65,6 +65,43 @@ Boolean rinit( const char *region_name, r_size_t region_size )
 
 } //rinit
 
+Boolean rchoose( const char * region_name )
+{
+    assert( region_name != NULL );
+    Boolean passed = false;
+    RegionNode curr; //=chosen_one
+    if ( region_name != NULL )
+    {
+        curr = search( region_name ); //from regionsList.h
+        if ( curr != NULL )
+        {
+            currRegion = curr;
+            passed = true;
+        }
+        else
+        {
+            passed = false;
+        }
+    }
+    return passed;
+} //rchoose
+
+//return the name of the currently chosen region 
+const char * rchosen()
+{
+    const char * currName = NULL;
+    assert( currRegion->name != NULL );
+    if ( currName != NULL )
+    {
+        if ( currRegion->name != NULL )
+        {
+            currName = currRegion->name;
+            assert( strcmp( currRegion->name, currName ) == 0 );
+        }
+    }
+    return currName;
+} //rchosen
+
 // = round_to_block
 r_size_t roundUp( r_size_t size )
 {
