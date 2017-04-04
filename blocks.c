@@ -19,6 +19,52 @@ void * createBlocks()
     return parent;
 } //createBlocks
 
+//=firstblock
+OneBlock * getFirstBlock( void * top ) //==list_top
+{
+    OneBlock * curr = NULL;
+    head = top;
+    //assert( top != NULL ); //should it be here?
+    if ( top != NULL )
+    {
+        curr = top->next;
+    }
+    return curr;
+} //getFirstBlock
+
+//=get_next_block
+OneBlock * getNextBlock( void * key )
+{
+    assert( key != NULL );
+    if ( key != NULL )
+    {
+        traverse = head;
+        while ( traverse != NULL && traverse->start < key )
+        {
+            traverse = traverse->next;
+        }
+    }
+    return traverse;
+} //getNextBlock
+
+//=get_prev_block
+OneBlock getPrevBlock( void * key )
+{
+    assert( target != NULL );
+    OneBlock result = NULL ; // =prev
+    if ( key != NULL )
+    {
+        traverse = top;
+        while ( traverse != NULL && traverse->start < key )
+        {
+            result = traverse;
+            traverse = traverse->next;
+        }
+        assert( result->start < key );
+    }
+    return result;
+} //getPrevBlock
+
 //=destroy_block_list
 Boolean destroyBlocks( void * top ) //=list_top
 {

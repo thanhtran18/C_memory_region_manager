@@ -15,3 +15,9 @@ struct ONE_BLOCK
 void * createBlocks();
 //=destroy_block_list
 Boolean destroyBlocks( void * top ); //=list_top
+//=firstblock
+OneBlock * getFirstBlock( void * top ); //==list_top
+//=get_next_block
+OneBlock * getNextBlock( void * key );
+//=get_prev_block
+OneBlock getPrevBlock( void * key );

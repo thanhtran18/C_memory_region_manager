@@ -102,6 +102,76 @@ const char * rchosen()
     return currName;
 } //rchosen
 
+//destroy the region with the given name, free all related memory
+void rdestroy( const char * region_name )
+{
+    assert( region_name !- NULL );
+    Boolean passed; //=success
+    RegionNode * curr; //=target_region
+
+    if ( region_name != NULL )
+    {
+        curr = search( region_name );
+        if ( curr != NULL )
+        {
+            if ( strcmp( curr->name, region_name ) == 0 )
+            {
+                passed = true;
+            }
+            if ( passed )
+            {
+                passed = destroyBlocks( curr->block );
+                assert( passed );
+                if ( passed )
+                {
+                    passed = delete( region_name );
+                    assert( passed );
+                    if ( passed )
+                    {
+                        if ( curr == currRegion )
+                        {
+                            currRegion = NULL;
+                            assert( currRegion == NULL );
+                        }
+                        currRegion = NULL;
+                        assert( currRegion == NULL );
+                    }
+                }
+            } //big if passsed
+        } //if curr != null
+    } //if region_name!=NULL
+} //rdestroy
+
+//print all data structure, but not block contents. Show the name of each region, 
+//Show the name of each region; underneath each, show the blocks allocated in them and their block sizes
+void rdump()
+{
+    OneBlock * nowBlock; //=current_block
+    RegionNode * nowRegion = returnFirst(); //=current_region
+    double freeSpace; //=percent
+    
+    while ( nowRegion != NULL )
+    {
+        freeSpace = ( 1 - ( ( double ) nowRegion->usedBytes / ( double ) nowRegion->size ) ) * 100;
+        nowBlock = getFirstBlock( nowRegion->block );
+        printf( "Name of the current region: %s\n", nowRegion->name );
+        printf( "Total size of the current region: %d\n", nowRegion->size );
+        printf( "Number of used bytes of the current region: %d\n", nowRegion->usedBytes );
+        
+        if ( nowBlock != NULL )
+        {
+            printf( "Blocks allocated in the region:\n");
+        }
+        while ( nowBlock != NULL )
+        {
+            printf( "Pointer to the block: %p\n", nowBlock->start );
+            printf( "Size of the block: %d\n", nowBlock->size );
+        }
+        printf( "\n" );
+        nowRegion = returnNext();
+    } //big while
+} //rdump
+
 // = round_to_block
 r_size_t roundUp( r_size_t size )
 {
@@ -121,6 +191,3 @@ r_size_t roundUp( r_size_t size )
     assert( rounded & 8 == 0 );
     return rounded;
 } //roundUp
-    
-
-} //rinit
