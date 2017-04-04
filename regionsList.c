@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "regionsList.h"
 
-Typedef struct REGION_NODE regionNode;
+/*
+typedef struct REGION_NODE regionNode;
 struct REGION_NODE
 {
     char * name; //name
@@ -14,7 +16,7 @@ struct REGION_NODE
     regionNode * next;
     r_size_t size;
     r_size_t usedBytes; //bytes_used
-};
+};*/
 
 static regionNode * traverse = NULL; //traverse_region
 static regionNode * head = NULL; //top
