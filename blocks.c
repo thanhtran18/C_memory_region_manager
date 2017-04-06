@@ -134,3 +134,92 @@ Boolean destroyBlocks( void * top ) //=list_top
     }
     return destroyed;
 } //destroyBlocks
+
+//first_fit                   / data_size / block_size / data_start
+void * firstFitStrategy( r_size_t dSize, r_size_t bSize, void * first )
+{
+    assert( dSize > 0 );
+    assert( bSize % 8 == 0 );
+    assert( first != NULL );
+    void * firstFitBlock = NULL; //=block_start
+    traverse = head->next;
+    OneBlock prev = head; //=prev_block
+    unsigned int prevSize; //=prev_size
+    if ( dSize > 0 && bSize % 8 == 0 && first != NULL && bSize > 0 )
+    {
+        //if (success)
+        prevSize = ( unsigned int ) first;
+        while ( traverse != NULL && bSize > ( unsigned int ) traverse->start - prevSize )
+        {
+            prev = traverse;
+            traverse = traverse->next;
+            prevSize = ( unsigned int ) prev->start + ( unsigned int ) prev->size;
+        }
+        if ( bSize <= dSize - ( prevSize - ( unsigned int ) first ) )
+        {
+            firstFitBlock = prev->start + prev->size;
+        }
+        else if ( prev->size == 0 )
+        {
+            firstFitBlock = first;
+        }
+
+    } //if
+    return firstFitBlock;
+} //firstFitStrategy
+
+//add_block                 / data_size / block_size / data_start / list_top
+OneBlock createBlock( r_size_t dSize, r_size_t bSize, void * first, void * parent )
+{
+    assert( dSize > 0 );
+    assert( bSize % 8 == 0 );
+    assert( parent != NULL && first != NULL );
+    OneBlock prev; //prev_block
+    OneBlock curr = ( OneBlock * )malloc( sizeof( OneBlock ) ); //new_block
+    assert( curr != NULL );
+    head = parent;
+
+    if ( dSize > 0 && bSize % 8 == 0 && parent != NULL && first != NULL )
+    {
+        //if (success)
+        curr->size = bSize;
+        if ( top->next != NULL)
+        {
+            curr->start = firstFitStrategy( dSize, bSize, first );
+            if ( curr->start == NULL )
+            {
+                free( curr );
+                curr = NULL;
+                assert( curr == NULL );
+            }
+            else
+            {
+                curr->next = getNextBlock( curr->start );
+                prev = getPrevBlock( curr->start );
+                prev->next = curr;
+            }
+        }
+        else
+        {
+            curr->start = first;
+            curr->next = head->next;
+            head->next = curr;
+        } //else
+    } //big if
+} //createBlock
+
+//=find_block            list_top / block_start
+OneBlock * blockSearch( void * top, void * blockFirst )
+{
+    assert( top != NULL );
+    assert( blockFirst != NULL );
+    if ( top != NULL && blockFirst != NULL )
+    {
+        traverse = top;
+        while ( traverse != NULL && blockFirst != traverse->start )
+        {
+            traverse = traverse->next;
+        }
+    }
+    return traverse;
+} //blockSearch

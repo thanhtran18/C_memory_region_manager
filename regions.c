@@ -102,6 +102,69 @@ const char * rchosen()
     return currName;
 } //rchosen
 
+void * ralloc( r_size_t block_size )
+{
+    assert( block_size > 0 );
+    assert( currRegion != NULL );
+    assert( currRegion->block != NULL );
+
+    r_size_t rounded = roundUp( block_size );
+    OneBlock * newBlock = NULL; //=new_block
+    void * dataStart = NULL; //=block_data_start
+
+    if ( block_size > 0 && currRegion != NULL && currRegion->block != NULL && ( currRegion->size - currRegion->usedBytes ) >= rounded )
+    {
+        newBlock = createBlock( currRegion->size, currRegion->data, rounded, currRegion->block );
+        if ( newBlock != NULL )
+        {
+            currRegion->usedBytes += rounded;
+            // zero_block_data
+            unsigned char * blockPtr; //ptr
+            for ( blockPtr = newBlock->start; ( void * ) blockPtr < newBlock->start; blockPtr++ )
+            {
+                *blockPtr = 0;
+                //assert( *blockPtr == 0 );
+            }
+            dataStart = newBlock->start;
+        }
+    } //
+    return dataStart;
+} //ralloc
+
+r_size_t rsize( void * block_ptr )
+{
+    assert( currRegion != NULL );
+    assert( block_ptr != NULL );
+    OneBlock * curr; //=search_block
+    r_size_t result;
+    if ( currRegion != NULL && block_ptr != NULL )
+    {
+        curr = blockSearch( currRegion->block, block_ptr );
+        if ( curr == NULL )
+        {
+            result = 0;
+        }
+        else
+        {
+            assert( curr->size > 0 );
+            if ( curr->size > 0 )
+            {
+                result = curr->size;
+            }
+        }
+    }
+    else
+    {
+        result = 0;
+    }
+    return result;
+} //rsize
+
+Boolean rfree( void * block_ptr )
+{
+    
+} //rfree
+
 //destroy the region with the given name, free all related memory
 void rdestroy( const char * region_name )
 {
