@@ -35,6 +35,7 @@ RegionNode * insert()
     return newNode;
 } //insert
 
+//=delete_region
 Boolean delete( const char * key )
 {
     assert( key != NULL );
@@ -106,7 +107,7 @@ Boolean delete( const char * key )
     return deleted;
 } //delete
 
-//found = search_region
+//=search_region
 Boolean found( const char * key ) //key = target
 {
     assert( key != NULL );
@@ -129,7 +130,7 @@ Boolean found( const char * key ) //key = target
     return foundResult;
 } //found
 
-//= return_region
+//=return_region
 RegionNode search( const char * key ) // = target
 {
     assert( key != NULL );
@@ -158,7 +159,7 @@ RegionNode search( const char * key ) // = target
     return result;
 } //search
 
-//= first_region
+//=first_region
 RegionNode * returnFirst()
 {
     if ( head == NULL )

@@ -10,6 +10,7 @@
 static OneBlock * head = NULL; //=top
 static OneBlock * traverse = NULL; //=traverse_block
 
+//=new_block_list
 void * createBlocks()
 {
     OneBlock * parent = ( OneBlock * ) malloc( sizeof( OneBlock ) );
@@ -19,7 +20,7 @@ void * createBlocks()
     return parent;
 } //createBlocks
 
-//=firstblock
+//=first_block
 OneBlock * getFirstBlock( void * top ) //==list_top
 {
     OneBlock * curr = NULL;
@@ -207,6 +208,27 @@ OneBlock createBlock( r_size_t dSize, r_size_t bSize, void * first, void * paren
         } //else
     } //big if
 } //createBlock
+
+//=deleteBlock      //list-top / target
+Boolean deleteBlock( void * top, OneNode * key )
+{
+    Boolean passed;
+    OneBlock prev;
+    if ( key != NULL && top != NULL )
+    {
+        head = top;
+        prev = getPrevBlock( key->start );
+        prev->next = key->next;
+        free( key );
+        key = NULL;
+        if ( key == NULL )
+        {
+            passed = true;
+        }
+        assert( passed );
+    }
+    return passed;
+} //deleteBlock
 
 //=find_block            list_top / block_start
 OneBlock * blockSearch( void * top, void * blockFirst )

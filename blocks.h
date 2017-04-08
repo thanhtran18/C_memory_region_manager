@@ -25,5 +25,7 @@ OneBlock getPrevBlock( void * key );
 void * firstFitStrategy( r_size_t dSize, r_size_t bSize, void * first )
 //add_block                 / data_size / block_size / data_start / list_top
 OneBlock createBlock( r_size_t dSize, r_size_t bSize, void * first, void * parent )
+//=deleteBlock      //list-top / target
+Boolean deleteBlock( void * top, OneNode * key )
 //=find_block            list_top / block_start
 OneBlock * blockSearch( void * top, void * blockFirst )

@@ -12,6 +12,8 @@
 static RegionNode * currRegion; //= chosen_region
 currRegion = NULL;
 
+r_size_t roundUp( r_size_t size );
+
 Boolean rinit( const char *region_name, r_size_t region_size )
 {
     assert( region_size > 0 );
@@ -162,7 +164,29 @@ r_size_t rsize( void * block_ptr )
 
 Boolean rfree( void * block_ptr )
 {
-    
+    assert( block_ptr != NULL );
+    assert( currRegion != NULL );
+    RegionNode * curr; //=current_region
+    OneBlock key = NULL; //=target
+    int size; //=block_size
+
+    if ( block_ptr != NULLL && currRegion != NULL )
+    {
+        curr = returnFirst();
+        if ( key != NULL )
+        {
+            size = key->size;
+        }
+        while ( key == NULL && currRegion != NULL )
+        {
+            key = blockSearch( currRegion->block, block_ptr );
+        }
+        if ( deleteBlock( currRegion->block, block_ptr ) )
+        {
+            currRegion->usedBytes -= size;
+        }
+    } //big if
+    return passed;
 } //rfree
 
 //destroy the region with the given name, free all related memory
