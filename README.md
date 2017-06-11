@@ -1,4 +1,4 @@
-# ASSIGNMENT 4 of COMP2160
+# ASSIGNMENT 4 - COMP2160
 
 # Student name:   CONG THANH TRAN
 
@@ -50,13 +50,13 @@ make
 
 ./regionsRun
 
-3. How to compile this program with the given test files given by Prof. Bristow? Run this command (replace the $ sign by the test number you want to test):
+3. How to compile this program with the given test files? Run this command (replace the $ sign by the test number you want to test):
 
 make test$Run
 
 !!!For example, If you want to compile test0.c, run: "make test0Run". if you want to compile test1.c, run: "make test1Run", and so on so forth.
 
-4. How to run this program with the given test files given by Prof. Bristow? Run this command (replace the $ sign by the test number you want to test similar to the example above):
+4. How to run this program with the given test files given? Run this command (replace the $ sign by the test number you want to test similar to the example above):
 
 ./test$Run
 
