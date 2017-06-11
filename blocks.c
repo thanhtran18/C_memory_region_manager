@@ -1,42 +1,109 @@
-//blocks.c = block_list.c
+//-----------------------------------------------------------------------------------
+// NAME:           CONG THANH TRAN
+// STUDENT NUMBER: 7802106
+// COURSE:         COMP2160, SECTION: A01
+// INSTRUCTOR:     FRANKLIN BRISTOW
+// ASSIGNMENT:     assignment 4 - MEMORY REGIONS
+// 
+// REMARKS: This module is the data structure used for managing a list of blocks in each region.
+//-----------------------------------------------------------------------------------
 
-#include <stdio.c>
-#include <stdlib.c>
+//blocks.c
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 #include "regions.h"
-#include "regionsList.h"
+#include "blocks.h"
 
-static OneBlock * head = NULL; //=top
-static OneBlock * traverse = NULL; //=traverse_block
+//-------------------------------------------------------------------------------------
+// CONSTANTS and TYPES
+//-------------------------------------------------------------------------------------
 
-//=new_block_list
+//-------------------------------------------------------------------------------------
+// VARIABLES
+//-------------------------------------------------------------------------------------
+static OneBlock * head = NULL;      //the head node of the list of blocks
+static OneBlock * traverse = NULL;  //the current node that is being processed
+
+//-------------------------------------------------------------------------------------
+// PROTOTYPES
+//-------------------------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------------------------
+// FUNCTIONS
+//-------------------------------------------------------------------------------------
+
+
+//invariant
+static void validateBlocks()
+{
+    if ( head != NULL )
+    {
+        assert( head->size % 8 == 0 );
+    }
+} //validateBlocks
+
 void * createBlocks()
 {
+    validateBlocks();
+
     OneBlock * parent = ( OneBlock * ) malloc( sizeof( OneBlock ) );
+    //set everything to NULL and 0
     parent->start = NULL;
     parent->next = NULL;
     parent->size = 0;
+    
+    validateBlocks();
     return parent;
 } //createBlocks
 
-//=first_block
-OneBlock * getFirstBlock( void * top ) //==list_top
+//-----------------------------------------------------------------------------------
+// getFirstBlock
+//
+// PURPOSE: this function will return the first block in the region
+//
+// PARAMETER:
+//     top - a pointer to blocks in a region
+//
+// RETURN
+//     this function will return the first block in that region, NULL on error
+//-----------------------------------------------------------------------------------
+OneBlock * getFirstBlock( void * top )
 {
-    OneBlock * curr = NULL;
+    validateBlocks();
+    assert( top != NULL );
+
+    OneBlock * curr = NULL; //the current node that is being processed
+    
     head = top;
-    //assert( top != NULL ); //should it be here?
     if ( top != NULL )
     {
-        curr = top->next;
+        curr = head->next;
     }
+    validateBlocks();
     return curr;
 } //getFirstBlock
 
-//=get_next_block
+//-----------------------------------------------------------------------------------
+// getNextBlock
+//
+// PURPOSE: this function will return the next block of the given one in the region
+//
+// PARAMETER:
+//     key - we need to find the next block of this one
+//
+// RETURN
+//     this function will return the next block in that region, NULL on error
+//-----------------------------------------------------------------------------------
 OneBlock * getNextBlock( void * key )
 {
+    validateBlocks();
     assert( key != NULL );
+
     if ( key != NULL )
     {
         traverse = head;
@@ -45,17 +112,31 @@ OneBlock * getNextBlock( void * key )
             traverse = traverse->next;
         }
     }
+
+    validateBlocks();
     return traverse;
 } //getNextBlock
 
-//=get_prev_block
-OneBlock getPrevBlock( void * key )
+//-----------------------------------------------------------------------------------
+// getPrevBlock
+//
+// PURPOSE: this function will return the previous block of the given one in the region
+//
+// PARAMETER:
+//     key - we need to find the previous block of this one
+//
+// RETURN
+//     this function will return the previous block in that region, NULL on error
+//-----------------------------------------------------------------------------------
+OneBlock * getPrevBlock( void * key )
 {
-    assert( target != NULL );
-    OneBlock result = NULL ; // =prev
+    validateBlocks();
+    assert( key != NULL );
+
+    OneBlock * result = NULL ; //returned value, as description above
     if ( key != NULL )
     {
-        traverse = top;
+        traverse = head;
         while ( traverse != NULL && traverse->start < key )
         {
             result = traverse;
@@ -63,16 +144,30 @@ OneBlock getPrevBlock( void * key )
         }
         assert( result->start < key );
     }
+
+    validateBlocks();
     return result;
 } //getPrevBlock
 
-//=destroy_block_list
-Boolean destroyBlocks( void * top ) //=list_top
+//-----------------------------------------------------------------------------------
+// destroyBlocks
+//
+// PURPOSE: this function will destroy all blocks in a region
+//
+// PARAMETER:
+//     top - the head node of the block list
+//
+// RETURN
+//     this function will return true if the blocks are successfully destroyed, false otherwise
+//-----------------------------------------------------------------------------------
+Boolean destroyBlocks( void * top )
 {
+    validateBlocks();
     assert( top != NULL );
+
     head = top;
-    Boolean destroyed = false; //=success
-    OneBlock * prev;
+    Boolean destroyed = false; //returned value, as description above
+    OneBlock * prev;           //a pointer points to the previous block
 
     if ( head != NULL )
     {
@@ -84,7 +179,7 @@ Boolean destroyBlocks( void * top ) //=list_top
         if ( !destroyed )
         {
             free( head );
-            head = NULL
+            head = NULL;
             if ( head == NULL )
             {
                 destroyed = true;
@@ -94,7 +189,7 @@ Boolean destroyBlocks( void * top ) //=list_top
         else
         {
             prev = head->next;
-            traverese = prev->next;
+            traverse = prev->next;
             prev->next = NULL;
             if ( prev->next == NULL )
             {
@@ -102,6 +197,7 @@ Boolean destroyBlocks( void * top ) //=list_top
             }
             assert( destroyed );
 
+            //destroy block by block
             while ( traverse != NULL )
             {
                 prev = traverse;
@@ -111,6 +207,7 @@ Boolean destroyBlocks( void * top ) //=list_top
                 {
                     destroyed = true;
                 }
+
                 assert( destroyed );
                 free( prev );
                 prev = NULL;
@@ -119,10 +216,7 @@ Boolean destroyBlocks( void * top ) //=list_top
             if ( prev == NULL && traverse == NULL )
             {
                 destroyed = true;
-            }
-            assert( destroyed );
-            if ( destroyed )
-            {
+                assert( destroyed );
                 free( head );
                 head = NULL;
                 if ( head == NULL )
@@ -132,61 +226,100 @@ Boolean destroyBlocks( void * top ) //=list_top
                 assert( destroyed );
             }
         } //else
-    }
+    } //big if
+
+    validateBlocks();
     return destroyed;
 } //destroyBlocks
 
-//first_fit                   / data_size / block_size / data_start
-void * firstFitStrategy( r_size_t dSize, r_size_t bSize, void * first )
+//-----------------------------------------------------------------------------------
+// firstFitStrategy
+//
+// PURPOSE: this function will find the first fit block of in a region for a given block
+//
+// PARAMETER:
+//     rSize - the size of the region
+//     bSize - the size of the block
+//     first - the pointer to the start
+//
+// RETURN
+//     this function will return a pointer to the first fit block in the region, NULL
+//     if can't find of any
+//-----------------------------------------------------------------------------------
+void * firstFitStrategy( r_size_t rSize, r_size_t bSize, void * first )
 {
-    assert( dSize > 0 );
+    validateBlocks();
+    assert( rSize > 0 );
+	assert( bSize > 0 );
     assert( bSize % 8 == 0 );
     assert( first != NULL );
-    void * firstFitBlock = NULL; //=block_start
+    
+    void * firstFitBlock = NULL; //returned value, as description above
     traverse = head->next;
-    OneBlock prev = head; //=prev_block
-    unsigned int prevSize; //=prev_size
-    if ( dSize > 0 && bSize % 8 == 0 && first != NULL && bSize > 0 )
+    OneBlock * prev = head;
+    unsigned int prevSize;
+
+    if ( rSize > 0 && bSize % 8 == 0 && first != NULL && bSize > 0 )
     {
-        //if (success)
         prevSize = ( unsigned int ) first;
-        while ( traverse != NULL && bSize > ( unsigned int ) traverse->start - prevSize )
+
+        //traverse through the region to find out the first fit block
+        while ( traverse != NULL && ( bSize > ( ( unsigned int ) traverse->start - prevSize ) ) )
         {
             prev = traverse;
             traverse = traverse->next;
             prevSize = ( unsigned int ) prev->start + ( unsigned int ) prev->size;
         }
-        if ( bSize <= dSize - ( prevSize - ( unsigned int ) first ) )
-        {
-            firstFitBlock = prev->start + prev->size;
-        }
-        else if ( prev->size == 0 )
+        
+        if ( prev->size == 0 )
         {
             firstFitBlock = first;
         }
-
+		else if ( bSize <= rSize - ( prevSize - ( unsigned int ) first ) )
+        {
+            firstFitBlock = prev->start + prev->size;
+        }
     } //if
+    
+    validateBlocks();
     return firstFitBlock;
 } //firstFitStrategy
 
-//add_block                 / data_size / block_size / data_start / list_top
-OneBlock createBlock( r_size_t dSize, r_size_t bSize, void * first, void * parent )
+//-----------------------------------------------------------------------------------
+// createBlock
+//
+// PURPOSE: this function will add a new block with given information to a suitable position
+//          in the region
+//
+// PARAMETER:
+//     rSize  - the size of the region
+//     bSize  - the size of the block
+//     first  - the pointer to the start
+//     parent - the pointer to the parent (head) of the list of blocks
+//
+// RETURN
+//     this function will return a pointer to the new block if successfully created, NULL otherwise
+//-----------------------------------------------------------------------------------
+OneBlock * createBlock( r_size_t rSize, r_size_t bSize, void * first, void * parent )
 {
-    assert( dSize > 0 );
+    validateBlocks();
+    assert( rSize > 0 );
     assert( bSize % 8 == 0 );
     assert( parent != NULL && first != NULL );
-    OneBlock prev; //prev_block
-    OneBlock curr = ( OneBlock * )malloc( sizeof( OneBlock ) ); //new_block
+
+    OneBlock * prev;    //a pointer to the previous block
+    OneBlock * curr = ( OneBlock * )malloc( sizeof( OneBlock ) ); //the current block that is being processed
     assert( curr != NULL );
+
     head = parent;
 
-    if ( dSize > 0 && bSize % 8 == 0 && parent != NULL && first != NULL )
+    if ( rSize > 0 && bSize % 8 == 0 && parent != NULL && first != NULL && curr != NULL )
     {
-        //if (success)
         curr->size = bSize;
-        if ( top->next != NULL)
+        if ( head->next != NULL)
         {
-            curr->start = firstFitStrategy( dSize, bSize, first );
+            //find out where to add the new block using first fit strategy
+            curr->start = firstFitStrategy( rSize, bSize, first );
             if ( curr->start == NULL )
             {
                 free( curr );
@@ -195,6 +328,7 @@ OneBlock createBlock( r_size_t dSize, r_size_t bSize, void * first, void * paren
             }
             else
             {
+                //insert the block to the correct position in the list
                 curr->next = getNextBlock( curr->start );
                 prev = getPrevBlock( curr->start );
                 prev->next = curr;
@@ -207,16 +341,36 @@ OneBlock createBlock( r_size_t dSize, r_size_t bSize, void * first, void * paren
             head->next = curr;
         } //else
     } //big if
+    
+    validateBlocks();
+    return curr;
 } //createBlock
 
-//=deleteBlock      //list-top / target
-Boolean deleteBlock( void * top, OneNode * key )
+//-----------------------------------------------------------------------------------
+// deleteBlock
+//
+// PURPOSE: this function will delete a block with given information in the region
+//          in the region
+//
+// PARAMETER:
+//     top - the head node of the block list
+//     key - the block that needs to be deleted
+//
+// RETURN
+//     this function will return true if the given block is successfully deleted, false otherwise
+//-----------------------------------------------------------------------------------
+Boolean deleteBlock( void * top, OneBlock * key )
 {
-    Boolean passed;
-    OneBlock prev;
+    validateBlocks();
+
+    Boolean passed = false;     //returned value, as description above
+    OneBlock * prev;    //a ponter to the previous block
+
     if ( key != NULL && top != NULL )
     {
+        passed = true;
         head = top;
+        //delete the given block from the list of blocks
         prev = getPrevBlock( key->start );
         prev->next = key->next;
         free( key );
@@ -227,21 +381,39 @@ Boolean deleteBlock( void * top, OneNode * key )
         }
         assert( passed );
     }
+    
+    validateBlocks();
     return passed;
 } //deleteBlock
 
-//=find_block            list_top / block_start
+//-----------------------------------------------------------------------------------
+// blockSearch
+//
+// PURPOSE: this function will search for a block with given information in a region
+//
+// PARAMETER:
+//     top        - the head node of the block list
+//     blockFirst - the pointer to the block.
+//
+// RETURN
+//     this function will return the block itself if found, NULL otherwise
+//-----------------------------------------------------------------------------------
 OneBlock * blockSearch( void * top, void * blockFirst )
 {
+    validateBlocks();
     assert( top != NULL );
     assert( blockFirst != NULL );
+
     if ( top != NULL && blockFirst != NULL )
     {
         traverse = top;
+        //traverse through the region
         while ( traverse != NULL && blockFirst != traverse->start )
         {
             traverse = traverse->next;
         }
     }
+    
+    validateBlocks();
     return traverse;
 } //blockSearch
