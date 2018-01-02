@@ -10,7 +10,6 @@ II. DATA MODEL
 
 III. HOW TO RUN THE PROGRAM?
 
-IV. GIT TAGS
 
 
 I. PURPOSE OF THE PROGRAM
@@ -55,10 +54,3 @@ make test$Run
 
 ***Note*** This unit test contains some invalid testing cases, which will trip off the assertions (they are supposed to do so). If you want to check the usage of assertions, simply remove -DNDEBUG flag from CFLAGS (if it's there) in the Makefile, run the command: "make clean", then recompile with those 2 commands above, you will get assertion failed at the end of the test.
 On the other hand, in order to make the unit test work for all cases, add the -DNDEBUG flag to CFLAGS (if it's not there already) in the Makefile, run the command: "make clean" again before recompiling.
-
-IV. GIT TAGS
-------------
-There are 3 git tags in this assignment:
-1. Finish-implementing-regions.c-and-two-other-helper-.c-files: Indicates that regions.c has been implemented successfully.
-2. Finished-implementing-the-whole-memory-regions-based-thing-It-worked: Indicates that the program is now working as expected with all the test files. This is the first version.
-3. the-assignment-is-done: This is the last version of the assignment. No more features and correction will be added.
