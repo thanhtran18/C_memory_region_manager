@@ -1,10 +1,3 @@
-# ASSIGNMENT 4 - COMP2160
-
-# Student name:   CONG THANH TRAN
-
-# Student number: 7802106
-
-# User ID:        tranct
 
 *** MEMORY REGIONS ***
 
