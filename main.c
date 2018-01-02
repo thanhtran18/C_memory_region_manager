@@ -1,9 +1,5 @@
 //-----------------------------------------------------------------------------------
-// NAME:           CONG THANH TRAN
-// STUDENT NUMBER: 7802106
-// COURSE:         COMP2160, SECTION: A01
-// INSTRUCTOR:     FRANKLIN BRISTOW
-// ASSIGNMENT:     assignment 4 - MEMORY REGIONS
+// AUTHOR:           CONG THANH TRAN
 // 
 // REMARKS: This program contains all function implementation for all the function signatures
 //          in the given regions.h header file
