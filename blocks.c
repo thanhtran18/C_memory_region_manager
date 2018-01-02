@@ -1,10 +1,6 @@
 //-----------------------------------------------------------------------------------
-// NAME:           CONG THANH TRAN
-// STUDENT NUMBER: 7802106
-// COURSE:         COMP2160, SECTION: A01
-// INSTRUCTOR:     FRANKLIN BRISTOW
-// ASSIGNMENT:     assignment 4 - MEMORY REGIONS
-// 
+// AUTHOR:           CONG THANH TRAN
+//
 // REMARKS: This module is the data structure used for managing a list of blocks in each region.
 //-----------------------------------------------------------------------------------
 
